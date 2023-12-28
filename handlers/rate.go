@@ -7,7 +7,7 @@ import (
 )
 
 func GetRates(c *fiber.Ctx) error {
-	rates, error := services.FetchRatesFromBinance()
+	rates, error := services.GetRates()
 
 	if error != nil {
 		response := utils.BuildJsonResponse(503, "Unable to get rates.")
@@ -15,7 +15,14 @@ func GetRates(c *fiber.Ctx) error {
 		return c.Status(503).JSON(response)
 	}
 
-	response := utils.BuildJsonResponseWithData(200, "Rate retrieved successfully.", rates)
+	rateResponse, _ := services.ConvertRateFromByteToStruct(rates)
+
+	return c.Status(200).JSON(utils.BuildJsonResponseWithData(200, "Rate retrieved successfully.", rateResponse))
+}
+
+func ConvertRate(c *fiber.Ctx) error {
+	services.ConvertRate(c.Body())
+	response := utils.BuildJsonResponse(200, "Rate converted successfully.")
 
 	return c.Status(200).JSON(response)
 }

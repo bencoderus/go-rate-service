@@ -6,32 +6,16 @@ import (
 	"net/http"
 )
 
-type BinanceRate struct {
+type BinanceCryptoResponseRate struct {
 	Symbol    string `json:"symbol"`
 	LastPrice string `json:"lastPrice"`
 	AskPrice  string `json:"askPrice"`
 	BidPrice  string `json:"bidPrice"`
 }
 
-type RefinedRate struct {
-	Currency  string `json:"currency"`
-	Price     string `json:"price"`
-	BuyPrice  string `json:"buyPrice"`
-	SellPrice string `json:"sellPrice"`
-}
+type BinanceCryptoResponseRates []BinanceCryptoResponseRate
 
-func getBinanceCurrencyPairs() map[string]string {
-	return map[string]string{
-		"BTCUSDT":  "BTC",
-		"ETHUSDT":  "ETH",
-		"SOLUSDT":  "SOL",
-		"XRPUSDT":  "XRP",
-		"DOGEUSDT": "DOGE",
-		"TUSDUSDT": "USDT",
-	}
-}
-
-func TransformRates(rates []BinanceRate) []RefinedRate {
+func (rates BinanceCryptoResponseRates) transformRate() []RefinedRate {
 	var transformed []RefinedRate
 
 	symbolCurrency := getBinanceCurrencyPairs()
@@ -52,24 +36,50 @@ func TransformRates(rates []BinanceRate) []RefinedRate {
 	return transformed
 }
 
-func FetchRatesFromBinance() ([]RefinedRate, error) {
-	var rates []BinanceRate
+func getBinanceCurrencyPairs() map[string]string {
+	return map[string]string{
+		"BTCUSDT":  "BTC",
+		"ETHUSDT":  "ETH",
+		"SOLUSDT":  "SOL",
+		"XRPUSDT":  "XRP",
+		"DOGEUSDT": "DOGE",
+		"TUSDUSDT": "USDT",
+	}
+}
+
+func BinanceGetRates() ([]byte, error) {
+	rates, err := BinanceFetchRates()
+
+	if err != nil {
+		return []byte{}, err
+	}
+
+	transformedRates := rates.transformRate()
+
+	rateByte, err := json.Marshal(transformedRates)
+
+	if err != nil {
+		return []byte{}, err
+	}
+
+	return rateByte, nil
+}
+
+func BinanceFetchRates() (BinanceCryptoResponseRates, error) {
+	var rates BinanceCryptoResponseRates
 	response, error := http.Get("https://api.binance.com/api/v3/ticker/24hr")
 
 	if error != nil {
-		return []RefinedRate{}, error
+		return BinanceCryptoResponseRates{}, error
 	}
 
 	byte, error := io.ReadAll(response.Body)
 
 	if error != nil {
-		return []RefinedRate{}, error
+		return BinanceCryptoResponseRates{}, error
 	}
 
 	json.Unmarshal(byte, &rates)
 
-	transformed := TransformRates(rates)
-
-	return transformed, nil
-
+	return rates, nil
 }
