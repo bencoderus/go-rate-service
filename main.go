@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-
+	"os"
 	"github.com/bencoderus/go-rate-service/router"
 	"github.com/bencoderus/go-rate-service/utils"
 	"github.com/gofiber/fiber/v2"
@@ -19,14 +19,11 @@ func CreateApp() *fiber.App {
 			var e *fiber.Error
 			if errors.As(err, &e) {
 				code = e.Code
+				errorMessage = e.Message
 			}
 
 			if code >= 500 {
 				fmt.Println("error", err)
-			}
-
-			if errors.As(err, &e) {
-				errorMessage = e.Message
 			}
 
 			return ctx.Status(code).JSON(utils.BuildJsonResponse(code, errorMessage))
@@ -42,7 +39,16 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	router.HandleRouting(app)
 
-	app.Listen(":3002")
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "3000"
+	}
+
+	fmt.Println("Server running on port", port)
+
+	app.Listen(":3003")
 }

@@ -2,7 +2,6 @@ package services
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 
 	"github.com/bencoderus/go-rate-service/database/redis"
@@ -13,10 +12,18 @@ const RATE_CACHE_KEY = "rateCacheKey"
 const RATE_VALIDITY_IN_MINUTES = 3
 const DURATION_IN_SECONDS = 60_000_000_000
 
+var SUPPORTED_COINS = map[string]string{
+	"BTC":  "Bitcoin",
+	"ETH":  "Ethereum",
+	"SOL":  "Solana",
+	"DOGE": "Doge",
+	"USDT": "Tether",
+}
+
 type ConvertPayload struct {
-	From   string `json:"from"`
-	To     string `json:"to"`
-	Amount int    `json:"amount"`
+	From   string `json:"from" validate:"required,min=3"`
+	To     string `json:"to" validate:"required,min=3"`
+	Amount int    `json:"amount" validate:"required,min=1"`
 }
 
 type RefinedRate struct {
@@ -57,17 +64,6 @@ func GetRates() ([]byte, error) {
 	return rateBytes, nil
 }
 
-func validateConvertRatePayload(payload ConvertPayload) bool {
-	return payload.Amount != 0 && payload.From != "" && payload.To != ""
-}
-
-func ConvertRate(payload []byte) utils.Error {
-	var parsedPayload ConvertPayload
-	json.Unmarshal(payload, &parsedPayload)
-
-	if !validateConvertRatePayload(parsedPayload) {
-		return utils.ThrowValidationError(fmt.Errorf("invalid payload"))
-	}
-	fmt.Println(parsedPayload)
+func ConvertRate(payload ConvertPayload) utils.Error {
 	return utils.Error{}
 }
