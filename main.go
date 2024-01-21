@@ -50,5 +50,5 @@ func main() {
 
 	fmt.Println("Server running on port", port)
 
-	app.Listen(":3003")
+	app.Listen(":"+port)
 }
