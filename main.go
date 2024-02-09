@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+
 	"github.com/bencoderus/go-rate-service/router"
 	"github.com/bencoderus/go-rate-service/utils"
 	"github.com/gofiber/fiber/v2"
@@ -44,11 +45,13 @@ func main() {
 
 	port := os.Getenv("PORT")
 
+	fmt.Println(os.Getenv("REDIS_CONNECTION_STRING"))
+
 	if port == "" {
 		port = "3000"
 	}
 
 	fmt.Println("Server running on port", port)
 
-	app.Listen(":"+port)
+	app.Listen(":" + port)
 }

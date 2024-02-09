@@ -41,7 +41,11 @@ func ConvertRateFromByteToStruct(rateBytes []byte) ([]RefinedRate, error) {
 }
 
 func GetRates() ([]byte, error) {
-	redisClient := redis.GetRedisConnection()
+	redisClient, error := redis.GetRedisConnection()
+
+	if error != nil {
+		return BinanceGetRates()
+	}
 
 	cached, error := redisClient.Get(RATE_CACHE_KEY)
 
