@@ -72,6 +72,9 @@ func BinanceFetchRates() (BinanceCryptoResponseRates, error) {
 	var rates BinanceCryptoResponseRates
 	response, error := http.Get("https://api.binance.com/api/v3/ticker/24hr")
 
+	fmt.Println("error from binance", error, response.Body)
+	fmt.Println("response", response)
+
 	if error != nil {
 		return BinanceCryptoResponseRates{}, error
 	}
