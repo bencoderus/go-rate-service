@@ -2,6 +2,7 @@ package services
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -56,6 +57,8 @@ func BinanceGetRates() ([]byte, error) {
 
 	transformedRates := rates.transformRate()
 
+	fmt.Println("Transformed rates", transformedRates)
+
 	rateByte, err := json.Marshal(transformedRates)
 
 	if err != nil {
@@ -80,6 +83,8 @@ func BinanceFetchRates() (BinanceCryptoResponseRates, error) {
 	}
 
 	json.Unmarshal(byte, &rates)
+
+	fmt.Println("Rate response", rates)
 
 	return rates, nil
 }
