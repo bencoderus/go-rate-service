@@ -57,8 +57,6 @@ func BinanceGetRates() ([]byte, error) {
 
 	transformedRates := rates.transformRate()
 
-	fmt.Println("Transformed rates", transformedRates)
-
 	rateByte, err := json.Marshal(transformedRates)
 
 	if err != nil {
@@ -72,12 +70,12 @@ func BinanceFetchRates() (BinanceCryptoResponseRates, error) {
 	var rates BinanceCryptoResponseRates
 	response, error := http.Get("https://api.binance.com/api/v3/ticker/24hr")
 
-	if response.StatusCode != 200 {
-		return BinanceCryptoResponseRates{}, fmt.Errorf("unable to fetch rate")
-	}
-
 	if error != nil {
 		return BinanceCryptoResponseRates{}, error
+	}
+
+	if response.StatusCode != 200 {
+		return BinanceCryptoResponseRates{}, fmt.Errorf("unable to fetch rates")
 	}
 
 	byte, error := io.ReadAll(response.Body)
@@ -85,6 +83,8 @@ func BinanceFetchRates() (BinanceCryptoResponseRates, error) {
 	if error != nil {
 		return BinanceCryptoResponseRates{}, error
 	}
+
+	fmt.Println("logging rates", rates)
 
 	json.Unmarshal(byte, &rates)
 

@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/bencoderus/go-rate-service/handlers"
+	"github.com/bencoderus/go-rate-service/internal/handlers"
 	"github.com/gofiber/fiber/v2"
 )
 

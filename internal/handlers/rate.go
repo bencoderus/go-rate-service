@@ -3,8 +3,8 @@ package handlers
 import (
 	"fmt"
 
-	"github.com/bencoderus/go-rate-service/services"
-	"github.com/bencoderus/go-rate-service/utils"
+	"github.com/bencoderus/go-rate-service/internal/services"
+	"github.com/bencoderus/go-rate-service/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -36,11 +36,11 @@ func validatePayload(payload services.ConvertPayload) (bool, []string) {
 		errors = append(errors, "amount field is required.")
 	}
 
-	if services.SUPPORTED_COINS[payload.From] == "" {
+	if payload.From != "" && services.SUPPORTED_COINS[payload.From] == "" {
 		errors = append(errors, fmt.Sprintf("%s is not supported.", payload.From))
 	}
 
-	if services.SUPPORTED_COINS[payload.To] == "" {
+	if payload.To != "" && services.SUPPORTED_COINS[payload.To] == "" {
 		errors = append(errors, fmt.Sprintf("%s is not supported.", payload.To))
 	}
 

@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/bencoderus/go-rate-service/database/redis"
-	"github.com/bencoderus/go-rate-service/utils"
+	"github.com/bencoderus/go-rate-service/internal/database/redis"
+	"github.com/bencoderus/go-rate-service/pkg/utils"
 )
 
 const RATE_CACHE_KEY = "rateCacheKey"

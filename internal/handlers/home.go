@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/bencoderus/go-rate-service/utils"
+	"github.com/bencoderus/go-rate-service/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 )
 

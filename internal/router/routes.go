@@ -1,8 +1,8 @@
 package router
 
 import (
-	"github.com/bencoderus/go-rate-service/handlers"
-	"github.com/bencoderus/go-rate-service/router/routes"
+	"github.com/bencoderus/go-rate-service/internal/handlers"
+	"github.com/bencoderus/go-rate-service/internal/router/routes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
